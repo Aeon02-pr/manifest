@@ -1,20 +1,85 @@
 {
   "schema_version": "v1",
   "name": "Google Drive Actions",
-  "description": "Interact with Google Drive files and folders",
+  "description": "Minimal GPT action for downloading or inspecting Google Drive files",
   "auth": {
     "type": "oauth",
     "authorization_url": "https://accounts.google.com/o/oauth2/v2/auth",
     "token_url": "https://oauth2.googleapis.com/token",
     "scopes": [
       "https://www.googleapis.com/auth/drive.readonly",
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/drive.metadata.readonly"
+      "https://www.googleapis.com/auth/drive.file"
     ]
   },
   "api": {
     "type": "openapi",
-    "url": "https://your-domain.com/drive-openapi.json"
+    "raw_schema": {
+      "openapi": "3.1.0",
+      "info": {
+        "title": "Google Drive API - Download File",
+        "version": "1.0.0"
+      },
+      "servers": [
+        {
+          "url": "https://www.googleapis.com/drive/v3"
+        }
+      ],
+      "paths": {
+        "/files/{fileId}": {
+          "get": {
+            "operationId": "getFile",
+            "summary": "Download or get file metadata",
+            "description": "If `alt=media` is set, downloads the binary content. Otherwise returns file metadata.",
+            "parameters": [
+              {
+                "name": "fileId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "alt",
+                "in": "query",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "enum": ["media"]
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "File metadata or binary content.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "name": { "type": "string" },
+                        "mimeType": { "type": "string" },
+                        "createdTime": { "type": "string", "format": "date-time" }
+                      }
+                    }
+                  },
+                  "application/octet-stream": {
+                    "schema": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "File not found."
+              }
+            }
+          }
+        }
+      }
+    }
   },
   "response": {
     "content-type": "application/octet-stream"
