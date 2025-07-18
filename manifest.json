@@ -1,0 +1,22 @@
+{
+  "schema_version": "v1",
+  "name": "Google Drive Actions",
+  "description": "Interact with Google Drive files and folders",
+  "auth": {
+    "type": "oauth",
+    "authorization_url": "https://accounts.google.com/o/oauth2/v2/auth",
+    "token_url": "https://oauth2.googleapis.com/token",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.metadata.readonly"
+    ]
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://your-domain.com/drive-openapi.json"
+  },
+  "response": {
+    "content-type": "application/octet-stream"
+  }
+}
